@@ -168,7 +168,7 @@ git remote add gitlink https://gitlink.org.cn/xuxiaowei-com-cn/spring-boot-start
 
 ## 参考文档
 
-- [实现登录第三方网站](https://open.github.com/document/orgapp-server/tutorial-obtaining-user-personal-information)
+- [授权 OAuth 应用](https://docs.github.com/cn/developers/apps/building-oauth-apps/authorizing-oauth-apps)
 
 ## 鸣谢
 
