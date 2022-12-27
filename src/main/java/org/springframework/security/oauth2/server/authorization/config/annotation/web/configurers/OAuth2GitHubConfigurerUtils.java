@@ -47,16 +47,16 @@ public class OAuth2GitHubConfigurerUtils {
 	}
 
 	public static GitHubService getGitHubService(HttpSecurity httpSecurity) {
-		GitHubService gitLabService = httpSecurity.getSharedObject(GitHubService.class);
-		if (gitLabService == null) {
-			gitLabService = OAuth2ConfigurerUtils.getOptionalBean(httpSecurity, GitHubService.class);
-			if (gitLabService == null) {
-				GitHubProperties gitLabProperties = OAuth2ConfigurerUtils.getOptionalBean(httpSecurity,
+		GitHubService gitHubService = httpSecurity.getSharedObject(GitHubService.class);
+		if (gitHubService == null) {
+			gitHubService = OAuth2ConfigurerUtils.getOptionalBean(httpSecurity, GitHubService.class);
+			if (gitHubService == null) {
+				GitHubProperties gitHubProperties = OAuth2ConfigurerUtils.getOptionalBean(httpSecurity,
 						GitHubProperties.class);
-				gitLabService = new InMemoryGitHubService(gitLabProperties);
+				gitHubService = new InMemoryGitHubService(gitHubProperties);
 			}
 		}
-		return gitLabService;
+		return gitHubService;
 	}
 
 }

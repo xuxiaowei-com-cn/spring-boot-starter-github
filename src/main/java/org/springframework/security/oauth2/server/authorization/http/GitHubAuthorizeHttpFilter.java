@@ -54,9 +54,9 @@ public class GitHubAuthorizeHttpFilter extends HttpFilter {
 
 	public static final String AUTHORIZE_URL = "https://github.com/oauth/authorize?client_id=%s&redirect_uri=%s&response_type=code&scope=%s&state=%s";
 
-	private GitHubProperties gitLabProperties;
+	private GitHubProperties gitHubProperties;
 
-	private GitHubService gitLabService;
+	private GitHubService gitHubService;
 
 	/**
 	 * GitHub 授权前缀
@@ -64,13 +64,13 @@ public class GitHubAuthorizeHttpFilter extends HttpFilter {
 	private String prefixUrl = PREFIX_URL;
 
 	@Autowired
-	public void setGitHubProperties(GitHubProperties gitLabProperties) {
-		this.gitLabProperties = gitLabProperties;
+	public void setGitHubProperties(GitHubProperties gitHubProperties) {
+		this.gitHubProperties = gitHubProperties;
 	}
 
 	@Autowired
-	public void setGitHubService(GitHubService gitLabService) {
-		this.gitLabService = gitLabService;
+	public void setGitHubService(GitHubService gitHubService) {
+		this.gitHubService = gitHubService;
 	}
 
 	@Override
@@ -85,14 +85,14 @@ public class GitHubAuthorizeHttpFilter extends HttpFilter {
 
 			String appid = requestUri.replace(prefixUrl + "/", "");
 
-			String redirectUri = gitLabService.getRedirectUriByAppid(appid);
+			String redirectUri = gitHubService.getRedirectUriByAppid(appid);
 
 			String binding = request.getParameter(OAuth2GitHubParameterNames.BINDING);
 			String scope = request.getParameter(OAuth2ParameterNames.SCOPE);
 
-			String state = gitLabService.stateGenerate(request, response, appid);
-			gitLabService.storeBinding(request, response, appid, state, binding);
-			gitLabService.storeUsers(request, response, appid, state, binding);
+			String state = gitHubService.stateGenerate(request, response, appid);
+			gitHubService.storeBinding(request, response, appid, state, binding);
+			gitHubService.storeUsers(request, response, appid, state, binding);
 
 			String url = String.format(AUTHORIZE_URL, appid, redirectUri, scope, state);
 

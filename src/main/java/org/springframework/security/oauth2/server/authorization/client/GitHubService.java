@@ -191,14 +191,14 @@ public interface GitHubService {
 	 * @param response 响应
 	 * @param uriVariables 参数
 	 * @param oauth2AccessTokenResponse OAuth2.1 授权 Token
-	 * @param gitLab GitHub 配置
+	 * @param gitHub GitHub 配置
 	 * @throws OAuth2AuthenticationException OAuth 2.1 可处理的异常，可使用
 	 * {@link OAuth2AuthorizationServerConfigurer#tokenEndpoint(Customizer)} 中的
 	 * {@link OAuth2TokenEndpointConfigurer#errorResponseHandler(AuthenticationFailureHandler)}
 	 * 拦截处理此异常
 	 */
 	void sendRedirect(HttpServletRequest request, HttpServletResponse response, Map<String, String> uriVariables,
-			OAuth2AccessTokenResponse oauth2AccessTokenResponse, GitHubProperties.GitHub gitLab)
+			OAuth2AccessTokenResponse oauth2AccessTokenResponse, GitHubProperties.GitHub gitHub)
 			throws OAuth2AuthenticationException;
 
 }

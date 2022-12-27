@@ -38,17 +38,17 @@ import org.springframework.security.oauth2.server.authorization.properties.GitHu
 @SuppressWarnings("AlibabaClassNamingShouldBeCamel")
 public class OAuth2GitHubConfiguration {
 
-	private GitHubProperties gitLabProperties;
+	private GitHubProperties gitHubProperties;
 
 	@Autowired
-	public void setGitHubProperties(GitHubProperties gitLabProperties) {
-		this.gitLabProperties = gitLabProperties;
+	public void setGitHubProperties(GitHubProperties gitHubProperties) {
+		this.gitHubProperties = gitHubProperties;
 	}
 
 	@Bean
 	@ConditionalOnMissingBean
-	public GitHubService gitLabService() {
-		return new InMemoryGitHubService(gitLabProperties);
+	public GitHubService gitHubService() {
+		return new InMemoryGitHubService(gitHubProperties);
 	}
 
 }

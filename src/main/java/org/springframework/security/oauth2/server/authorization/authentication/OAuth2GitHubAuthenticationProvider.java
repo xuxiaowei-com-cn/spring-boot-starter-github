@@ -9,9 +9,9 @@ package org.springframework.security.oauth2.server.authorization.authentication;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -95,7 +95,7 @@ public class OAuth2GitHubAuthenticationProvider implements AuthenticationProvide
 	private OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator;
 
 	@Setter
-	private GitHubService gitLabService;
+	private GitHubService gitHubService;
 
 	public OAuth2GitHubAuthenticationProvider(HttpSecurity builder) {
 		Assert.notNull(builder, "HttpSecurity 不能为空");
@@ -148,24 +148,24 @@ public class OAuth2GitHubAuthenticationProvider implements AuthenticationProvide
 			throw new OAuth2AuthenticationException(error);
 		}
 
-		GitHubTokenResponse gitLabTokenResponse = gitLabService.getAccessTokenResponse(appid, code, state, binding,
+		GitHubTokenResponse gitHubTokenResponse = gitHubService.getAccessTokenResponse(appid, code, state, binding,
 				ACCESS_TOKEN_URL, USERINFO_URL, remoteAddress, sessionId);
 
-		GitHubTokenResponse.UserInfo userInfo = gitLabTokenResponse.getUserInfo();
+		GitHubTokenResponse.UserInfo userInfo = gitHubTokenResponse.getUserInfo();
 
 		int id = userInfo.getId();
 		String username = userInfo.getUsername();
 
-		String accessToken = gitLabTokenResponse.getAccessToken();
-		String refreshToken = gitLabTokenResponse.getRefreshToken();
-		Integer expiresIn = gitLabTokenResponse.getExpiresIn();
-		String scope = gitLabTokenResponse.getScope();
+		String accessToken = gitHubTokenResponse.getAccessToken();
+		String refreshToken = gitHubTokenResponse.getRefreshToken();
+		Integer expiresIn = gitHubTokenResponse.getExpiresIn();
+		String scope = gitHubTokenResponse.getScope();
 
 		OAuth2Authorization.Builder builder = OAuth2Authorization.withRegisteredClient(registeredClient);
 		builder.principalName(id + "");
-		builder.authorizationGrantType(OAuth2GitHubAuthenticationToken.GITLAB);
+		builder.authorizationGrantType(OAuth2GitHubAuthenticationToken.GITHUB);
 
-		AbstractAuthenticationToken abstractAuthenticationToken = gitLabService.authenticationToken(clientPrincipal,
+		AbstractAuthenticationToken abstractAuthenticationToken = gitHubService.authenticationToken(clientPrincipal,
 				additionalParameters, grantAuthenticationToken.getDetails(), appid, code, id, null, username,
 				accessToken, refreshToken, expiresIn, scope);
 
@@ -181,7 +181,7 @@ public class OAuth2GitHubAuthenticationProvider implements AuthenticationProvide
 				.authorizationServerContext(AuthorizationServerContextHolder.getContext())
 				.authorization(authorization)
 				.authorizedScopes(authorization.getAttribute(AUTHORIZED_SCOPE_KEY))
-				.authorizationGrantType(OAuth2GitHubAuthenticationToken.GITLAB)
+				.authorizationGrantType(OAuth2GitHubAuthenticationToken.GITHUB)
 				.authorizationGrant(grantAuthenticationToken);
 		// @formatter:on
 
@@ -248,8 +248,8 @@ public class OAuth2GitHubAuthenticationProvider implements AuthenticationProvide
 			tokenGenerator = OAuth2GitHubConfigurerUtils.getTokenGenerator(builder);
 		}
 
-		if (gitLabService == null) {
-			gitLabService = OAuth2GitHubConfigurerUtils.getGitHubService(builder);
+		if (gitHubService == null) {
+			gitHubService = OAuth2GitHubConfigurerUtils.getGitHubService(builder);
 		}
 	}
 

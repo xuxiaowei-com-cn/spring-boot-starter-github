@@ -67,10 +67,10 @@ import java.util.*;
  */
 public class InMemoryGitHubService implements GitHubService {
 
-	private final GitHubProperties gitLabProperties;
+	private final GitHubProperties gitHubProperties;
 
-	public InMemoryGitHubService(GitHubProperties gitLabProperties) {
-		this.gitLabProperties = gitLabProperties;
+	public InMemoryGitHubService(GitHubProperties gitHubProperties) {
+		this.gitHubProperties = gitHubProperties;
 	}
 
 	/**
@@ -84,8 +84,8 @@ public class InMemoryGitHubService implements GitHubService {
 	 */
 	@Override
 	public String getRedirectUriByAppid(String appid) throws OAuth2AuthenticationException {
-		GitHubProperties.GitHub gitLab = getGitHubByAppid(appid);
-		String redirectUriPrefix = gitLab.getRedirectUriPrefix();
+		GitHubProperties.GitHub gitHub = getGitHubByAppid(appid);
+		String redirectUriPrefix = gitHub.getRedirectUriPrefix();
 
 		if (StringUtils.hasText(redirectUriPrefix)) {
 			return UriUtils.encode(redirectUriPrefix + "/" + appid, StandardCharsets.UTF_8);
@@ -177,15 +177,15 @@ public class InMemoryGitHubService implements GitHubService {
 	 */
 	@Override
 	public GitHubProperties.GitHub getGitHubByAppid(String appid) throws OAuth2AuthenticationException {
-		List<GitHubProperties.GitHub> list = gitLabProperties.getList();
+		List<GitHubProperties.GitHub> list = gitHubProperties.getList();
 		if (list == null) {
 			OAuth2Error error = new OAuth2Error(OAuth2GitHubEndpointUtils.ERROR_CODE, "appid 未配置", null);
 			throw new AppidGitHubException(error);
 		}
 
-		for (GitHubProperties.GitHub gitLab : list) {
-			if (appid.equals(gitLab.getAppid())) {
-				return gitLab;
+		for (GitHubProperties.GitHub gitHub : list) {
+			if (appid.equals(gitHub.getAppid())) {
+				return gitHub;
 			}
 		}
 		OAuth2Error error = new OAuth2Error(OAuth2GitHubEndpointUtils.ERROR_CODE, "未匹配到 appid", null);
@@ -247,9 +247,9 @@ public class InMemoryGitHubService implements GitHubService {
 		Map<String, String> uriVariables = new HashMap<>(8);
 		uriVariables.put(OAuth2ParameterNames.CLIENT_ID, appid);
 
-		GitHubProperties.GitHub gitLab = getGitHubByAppid(appid);
-		String secret = gitLab.getSecret();
-		String redirectUri = gitLab.getRedirectUriPrefix() + "/" + appid;
+		GitHubProperties.GitHub gitHub = getGitHubByAppid(appid);
+		String secret = gitHub.getSecret();
+		String redirectUri = gitHub.getRedirectUriPrefix() + "/" + appid;
 
 		uriVariables.put(OAuth2ParameterNames.CLIENT_SECRET, secret);
 		uriVariables.put(OAuth2ParameterNames.CODE, code);
@@ -261,10 +261,10 @@ public class InMemoryGitHubService implements GitHubService {
 
 		String forObject = restTemplate.getForObject(accessTokenUrl, String.class, uriVariables);
 
-		GitHubTokenResponse gitLabTokenResponse;
+		GitHubTokenResponse gitHubTokenResponse;
 		ObjectMapper objectMapper = new ObjectMapper();
 		try {
-			gitLabTokenResponse = objectMapper.readValue(forObject, GitHubTokenResponse.class);
+			gitHubTokenResponse = objectMapper.readValue(forObject, GitHubTokenResponse.class);
 		}
 		catch (JsonProcessingException e) {
 			OAuth2Error error = new OAuth2Error(OAuth2GitHubEndpointUtils.ERROR_CODE,
@@ -272,10 +272,10 @@ public class InMemoryGitHubService implements GitHubService {
 			throw new OAuth2AuthenticationException(error, e);
 		}
 
-		String accessToken = gitLabTokenResponse.getAccessToken();
+		String accessToken = gitHubTokenResponse.getAccessToken();
 		if (accessToken == null) {
-			OAuth2Error error = new OAuth2Error(gitLabTokenResponse.getError(),
-					gitLabTokenResponse.getErrorDescription(), OAuth2GitHubEndpointUtils.AUTH_CODE2SESSION_URI);
+			OAuth2Error error = new OAuth2Error(gitHubTokenResponse.getError(),
+					gitHubTokenResponse.getErrorDescription(), OAuth2GitHubEndpointUtils.AUTH_CODE2SESSION_URI);
 			throw new OAuth2AuthenticationException(error);
 		}
 
@@ -285,7 +285,7 @@ public class InMemoryGitHubService implements GitHubService {
 		try {
 			GitHubTokenResponse.UserInfo userInfo = restTemplate.getForObject(userinfoUrl,
 					GitHubTokenResponse.UserInfo.class, map);
-			gitLabTokenResponse.setUserInfo(userInfo);
+			gitHubTokenResponse.setUserInfo(userInfo);
 		}
 		catch (Exception e) {
 			OAuth2Error error = new OAuth2Error(OAuth2GitHubEndpointUtils.ERROR_CODE, "使用 GitHub  获取用户个人信息异常：",
@@ -293,7 +293,7 @@ public class InMemoryGitHubService implements GitHubService {
 			throw new OAuth2AuthenticationException(error, e);
 		}
 
-		return gitLabTokenResponse;
+		return gitHubTokenResponse;
 	}
 
 	/**
@@ -322,7 +322,7 @@ public class InMemoryGitHubService implements GitHubService {
 			Object credentials, String username, String accessToken, String refreshToken, Integer expiresIn,
 			String scope) throws OAuth2AuthenticationException {
 		List<GrantedAuthority> authorities = new ArrayList<>();
-		SimpleGrantedAuthority authority = new SimpleGrantedAuthority(gitLabProperties.getDefaultRole());
+		SimpleGrantedAuthority authority = new SimpleGrantedAuthority(gitHubProperties.getDefaultRole());
 		authorities.add(authority);
 		User user = new User(id + "", accessToken, authorities);
 
@@ -344,7 +344,7 @@ public class InMemoryGitHubService implements GitHubService {
 	 * @param response 响应
 	 * @param uriVariables 参数
 	 * @param oauth2AccessTokenResponse OAuth2.1 授权 Token
-	 * @param gitLab GitHub 配置
+	 * @param gitHub GitHub 配置
 	 * @throws OAuth2AuthenticationException OAuth 2.1 可处理的异常，可使用
 	 * {@link OAuth2AuthorizationServerConfigurer#tokenEndpoint(Customizer)} 中的
 	 * {@link OAuth2TokenEndpointConfigurer#errorResponseHandler(AuthenticationFailureHandler)}
@@ -352,14 +352,14 @@ public class InMemoryGitHubService implements GitHubService {
 	 */
 	@Override
 	public void sendRedirect(HttpServletRequest request, HttpServletResponse response, Map<String, String> uriVariables,
-			OAuth2AccessTokenResponse oauth2AccessTokenResponse, GitHubProperties.GitHub gitLab)
+			OAuth2AccessTokenResponse oauth2AccessTokenResponse, GitHubProperties.GitHub gitHub)
 			throws OAuth2AuthenticationException {
 
 		OAuth2AccessToken accessToken = oauth2AccessTokenResponse.getAccessToken();
 
 		try {
 			response.sendRedirect(
-					gitLab.getSuccessUrl() + "?" + gitLab.getParameterName() + "=" + accessToken.getTokenValue());
+					gitHub.getSuccessUrl() + "?" + gitHub.getParameterName() + "=" + accessToken.getTokenValue());
 		}
 		catch (IOException e) {
 			OAuth2Error error = new OAuth2Error(OAuth2GitHubEndpointUtils.ERROR_CODE, "GitHub 重定向异常", null);
