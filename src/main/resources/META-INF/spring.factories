@@ -1,0 +1,5 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  org.springframework.security.oauth2.server.authorization.http.GitHubAuthorizeHttpFilter,\
+  org.springframework.security.oauth2.server.authorization.http.GitHubCodeHttpFilter,\
+  org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2GitHubConfiguration,\
+  org.springframework.security.oauth2.server.authorization.properties.GitHubProperties
