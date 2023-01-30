@@ -169,7 +169,7 @@ public interface GitHubService {
 	 * @param code 授权码
 	 * @param id 用户唯一标识
 	 * @param credentials 证书
-	 * @param username GitHub登录用户名
+	 * @param login GitHub登录用户名
 	 * @param accessToken 授权凭证
 	 * @param refreshToken 刷新凭证
 	 * @param expiresIn 过期时间
@@ -182,8 +182,8 @@ public interface GitHubService {
 	 */
 	AbstractAuthenticationToken authenticationToken(Authentication clientPrincipal,
 			Map<String, Object> additionalParameters, Object details, String appid, String code, int id,
-			Object credentials, String username, String accessToken, String refreshToken, Integer expiresIn,
-			String scope) throws OAuth2AuthenticationException;
+			Object credentials, String login, String accessToken, String refreshToken, Integer expiresIn, String scope)
+			throws OAuth2AuthenticationException;
 
 	/**
 	 * 授权成功重定向方法

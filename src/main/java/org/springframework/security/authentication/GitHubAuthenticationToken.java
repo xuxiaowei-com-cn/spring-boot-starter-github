@@ -137,7 +137,7 @@ public class GitHubAuthenticationToken extends AbstractAuthenticationToken {
 	 */
 	@Getter
 	@Setter
-	private String username;
+	private String login;
 
 	public GitHubAuthenticationToken(Collection<? extends GrantedAuthority> authorities, Authentication clientPrincipal,
 			Authentication principal, UserDetails userDetails, Map<String, Object> additionalParameters, Object details,
