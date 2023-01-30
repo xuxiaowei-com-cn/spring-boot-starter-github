@@ -52,7 +52,11 @@ public class GitHubAuthorizeHttpFilter extends HttpFilter {
 
 	public static final String PREFIX_URL = "/github/authorize";
 
-	public static final String AUTHORIZE_URL = "https://github.com/oauth/authorize?client_id=%s&redirect_uri=%s&response_type=code&scope=%s&state=%s";
+	/**
+	 * @see <a href=
+	 * "https://docs.github.com/zh/developers/apps/building-oauth-apps/authorizing-oauth-apps#1-%E8%AF%B7%E6%B1%82%E7%94%A8%E6%88%B7%E7%9A%84-github-%E6%A0%87%E8%AF%86">1.请求用户的GitHub标识</a>
+	 */
+	public static final String AUTHORIZE_URL = "https://github.com/login/oauth/authorize?client_id=%s&redirect_uri=%s&response_type=code&scope=%s&state=%s";
 
 	private GitHubProperties gitHubProperties;
 

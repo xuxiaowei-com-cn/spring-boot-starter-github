@@ -27,6 +27,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
@@ -53,6 +54,8 @@ import org.springframework.security.oauth2.server.authorization.properties.GitHu
 import org.springframework.security.oauth2.server.authorization.web.authentication.OAuth2GitHubEndpointUtils;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.HttpMessageConverterExtractor;
+import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriUtils;
 
@@ -260,7 +263,18 @@ public class InMemoryGitHubService implements GitHubService {
 		List<HttpMessageConverter<?>> messageConverters = restTemplate.getMessageConverters();
 		messageConverters.set(1, new StringHttpMessageConverter(StandardCharsets.UTF_8));
 
-		String forObject = restTemplate.getForObject(accessTokenUrl, String.class, uriVariables);
+		// 设置代理
+		// @formatter:off
+		// SimpleClientHttpRequestFactory simpleClientHttpRequestFactory = new SimpleClientHttpRequestFactory();
+		// simpleClientHttpRequestFactory.setProxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 12333)));
+		// restTemplate.setRequestFactory(simpleClientHttpRequestFactory);
+		// @formatter:on
+
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		HttpEntity<?> httpEntity = new HttpEntity<>(httpHeaders);
+
+		String forObject = restTemplate.postForObject(accessTokenUrl, httpEntity, String.class, uriVariables);
 
 		GitHubTokenResponse gitHubTokenResponse;
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -281,12 +295,17 @@ public class InMemoryGitHubService implements GitHubService {
 			throw new OAuth2AuthenticationException(error);
 		}
 
-		Map<String, String> map = new HashMap<>(4);
-		map.put(OAuth2ParameterNames.ACCESS_TOKEN, accessToken);
+		httpHeaders.setBearerAuth(accessToken);
 
 		try {
-			GitHubTokenResponse.UserInfo userInfo = restTemplate.getForObject(userinfoUrl,
-					GitHubTokenResponse.UserInfo.class, map);
+			// HTTP GET 支持设置 Header
+			RequestCallback requestCallback = restTemplate.httpEntityCallback(httpEntity,
+					GitHubTokenResponse.UserInfo.class);
+			HttpMessageConverterExtractor<GitHubTokenResponse.UserInfo> responseExtractor = new HttpMessageConverterExtractor<>(
+					GitHubTokenResponse.UserInfo.class, restTemplate.getMessageConverters());
+			GitHubTokenResponse.UserInfo userInfo = restTemplate.execute(userinfoUrl, HttpMethod.GET, requestCallback,
+					responseExtractor);
+
 			gitHubTokenResponse.setUserInfo(userInfo);
 		}
 		catch (Exception e) {

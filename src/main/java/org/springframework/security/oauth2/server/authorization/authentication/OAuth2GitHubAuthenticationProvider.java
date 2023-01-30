@@ -75,16 +75,16 @@ public class OAuth2GitHubAuthenticationProvider implements AuthenticationProvide
 	private static final String AUTHORIZED_SCOPE_KEY = OAuth2Authorization.class.getName().concat(".AUTHORIZED_SCOPE");
 
 	/**
-	 *
-	 *
+	 * @see <a href=
+	 * "https://docs.github.com/zh/developers/apps/building-oauth-apps/authorizing-oauth-apps#2-%E7%94%A8%E6%88%B7%E8%A2%AB-github-%E9%87%8D%E5%AE%9A%E5%90%91%E5%9B%9E%E4%BD%A0%E7%9A%84%E7%AB%99%E7%82%B9">2.用户被GitHub重定向回你的站点</a>
 	 */
-	public static final String ACCESS_TOKEN_URL = "https://github.com/oauth/token?client_id={client_id}&client_secret={client_secret}&code={code}&grant_type=authorization_code&redirect_uri={redirect_uri}";
+	public static final String ACCESS_TOKEN_URL = "https://github.com/login/oauth/access_token?client_id={client_id}&client_secret={client_secret}&code={code}&redirect_uri={redirect_uri}";
 
 	/**
-	 *
-	 *
+	 * @see <a href=
+	 * "https://docs.github.com/zh/developers/apps/building-oauth-apps/authorizing-oauth-apps#3-%E4%BD%BF%E7%94%A8%E8%AE%BF%E9%97%AE%E4%BB%A4%E7%89%8C%E8%AE%BF%E9%97%AE-api">3.使用访问令牌访问API</a>
 	 */
-	public static final String USERINFO_URL = "https://github.com/api/v4/user?access_token={access_token}";
+	public static final String USERINFO_URL = "https://api.github.com/user";
 
 	private final HttpSecurity builder;
 
