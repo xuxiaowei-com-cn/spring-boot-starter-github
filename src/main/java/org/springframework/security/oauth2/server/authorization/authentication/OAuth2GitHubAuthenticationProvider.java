@@ -154,7 +154,7 @@ public class OAuth2GitHubAuthenticationProvider implements AuthenticationProvide
 		GitHubTokenResponse.UserInfo userInfo = gitHubTokenResponse.getUserInfo();
 
 		int id = userInfo.getId();
-		String username = userInfo.getUsername();
+		String login = userInfo.getLogin();
 
 		String accessToken = gitHubTokenResponse.getAccessToken();
 		String refreshToken = gitHubTokenResponse.getRefreshToken();
@@ -166,8 +166,8 @@ public class OAuth2GitHubAuthenticationProvider implements AuthenticationProvide
 		builder.authorizationGrantType(OAuth2GitHubAuthenticationToken.GITHUB);
 
 		AbstractAuthenticationToken abstractAuthenticationToken = gitHubService.authenticationToken(clientPrincipal,
-				additionalParameters, grantAuthenticationToken.getDetails(), appid, code, id, null, username,
-				accessToken, refreshToken, expiresIn, scope);
+				additionalParameters, grantAuthenticationToken.getDetails(), appid, code, id, null, login, accessToken,
+				refreshToken, expiresIn, scope);
 
 		builder.attribute(Principal.class.getName(), abstractAuthenticationToken);
 		builder.attribute(AUTHORIZED_SCOPE_KEY, requestedScopes);

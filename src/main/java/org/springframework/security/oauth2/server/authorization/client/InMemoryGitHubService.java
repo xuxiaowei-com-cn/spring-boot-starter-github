@@ -276,11 +276,11 @@ public class InMemoryGitHubService implements GitHubService {
 
 		String forObject = restTemplate.postForObject(accessTokenUrl, httpEntity, String.class, uriVariables);
 
-		GitHubTokenResponse gitHubTokenResponse;
+		GitHubTokenResponse accessTokenResponse;
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		try {
-			gitHubTokenResponse = objectMapper.readValue(forObject, GitHubTokenResponse.class);
+			accessTokenResponse = objectMapper.readValue(forObject, GitHubTokenResponse.class);
 		}
 		catch (JsonProcessingException e) {
 			OAuth2Error error = new OAuth2Error(OAuth2GitHubEndpointUtils.ERROR_CODE,
@@ -288,10 +288,10 @@ public class InMemoryGitHubService implements GitHubService {
 			throw new OAuth2AuthenticationException(error, e);
 		}
 
-		String accessToken = gitHubTokenResponse.getAccessToken();
+		String accessToken = accessTokenResponse.getAccessToken();
 		if (accessToken == null) {
-			OAuth2Error error = new OAuth2Error(gitHubTokenResponse.getError(),
-					gitHubTokenResponse.getErrorDescription(), OAuth2GitHubEndpointUtils.AUTH_CODE2SESSION_URI);
+			OAuth2Error error = new OAuth2Error(accessTokenResponse.getError(),
+					accessTokenResponse.getErrorDescription(), OAuth2GitHubEndpointUtils.AUTH_CODE2SESSION_URI);
 			throw new OAuth2AuthenticationException(error);
 		}
 
@@ -306,7 +306,7 @@ public class InMemoryGitHubService implements GitHubService {
 			GitHubTokenResponse.UserInfo userInfo = restTemplate.execute(userinfoUrl, HttpMethod.GET, requestCallback,
 					responseExtractor);
 
-			gitHubTokenResponse.setUserInfo(userInfo);
+			accessTokenResponse.setUserInfo(userInfo);
 		}
 		catch (Exception e) {
 			OAuth2Error error = new OAuth2Error(OAuth2GitHubEndpointUtils.ERROR_CODE, "使用 GitHub  获取用户个人信息异常：",
@@ -314,7 +314,7 @@ public class InMemoryGitHubService implements GitHubService {
 			throw new OAuth2AuthenticationException(error, e);
 		}
 
-		return gitHubTokenResponse;
+		return accessTokenResponse;
 	}
 
 	/**
@@ -326,7 +326,7 @@ public class InMemoryGitHubService implements GitHubService {
 	 * @param code 授权码
 	 * @param id 用户唯一标识
 	 * @param credentials 证书
-	 * @param username GitHub登录用户名
+	 * @param login GitHub登录用户名
 	 * @param accessToken 授权凭证
 	 * @param refreshToken 刷新凭证
 	 * @param expiresIn 过期时间
@@ -340,8 +340,8 @@ public class InMemoryGitHubService implements GitHubService {
 	@Override
 	public AbstractAuthenticationToken authenticationToken(Authentication clientPrincipal,
 			Map<String, Object> additionalParameters, Object details, String appid, String code, int id,
-			Object credentials, String username, String accessToken, String refreshToken, Integer expiresIn,
-			String scope) throws OAuth2AuthenticationException {
+			Object credentials, String login, String accessToken, String refreshToken, Integer expiresIn, String scope)
+			throws OAuth2AuthenticationException {
 		List<GrantedAuthority> authorities = new ArrayList<>();
 		SimpleGrantedAuthority authority = new SimpleGrantedAuthority(gitHubProperties.getDefaultRole());
 		authorities.add(authority);
@@ -354,7 +354,7 @@ public class InMemoryGitHubService implements GitHubService {
 				principal, user, additionalParameters, details, appid, code, id);
 
 		authenticationToken.setCredentials(credentials);
-		authenticationToken.setUsername(username);
+		authenticationToken.setLogin(login);
 
 		return authenticationToken;
 	}

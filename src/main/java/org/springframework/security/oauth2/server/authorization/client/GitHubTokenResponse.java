@@ -24,7 +24,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * 通过 code 换取网页授权 access_token 返回值
@@ -97,89 +96,77 @@ public class GitHubTokenResponse implements Serializable {
 	@Data
 	public static class UserInfo {
 
-		@JsonProperty("can_create_project")
-		private boolean canCreateProject;
+		@JsonProperty("gists_url")
+		private String gistsUrl;
 
-		@JsonProperty("private_profile")
-		private boolean privateProfile;
+		@JsonProperty("repos_url")
+		private String reposUrl;
 
-		@JsonProperty("work_information")
-		private Object workInformation;
+		@JsonProperty("following_url")
+		private String followingUrl;
 
-		@JsonProperty("commit_email")
-		private String commitEmail;
-
-		@JsonProperty("bot")
-		private boolean bot;
-
-		@JsonProperty("theme_id")
-		private int themeId;
-
-		@JsonProperty("created_at")
-		private String createdAt;
+		@JsonProperty("twitter_username")
+		private String twitterUsername;
 
 		@JsonProperty("bio")
 		private String bio;
 
-		@JsonProperty("projects_limit")
-		private int projectsLimit;
+		@JsonProperty("created_at")
+		private String createdAt;
 
-		@JsonProperty("linkedin")
-		private String linkedin;
+		@JsonProperty("login")
+		private String login;
 
-		@JsonProperty("last_activity_on")
-		private String lastActivityOn;
+		@JsonProperty("type")
+		private String type;
 
-		@JsonProperty("can_create_group")
-		private boolean canCreateGroup;
+		@JsonProperty("blog")
+		private String blog;
 
-		@JsonProperty("skype")
-		private String skype;
+		@JsonProperty("subscriptions_url")
+		private String subscriptionsUrl;
 
-		@JsonProperty("twitter")
-		private String twitter;
+		@JsonProperty("updated_at")
+		private String updatedAt;
 
-		@JsonProperty("identities")
-		private List<IdentitiesItem> identities;
+		@JsonProperty("site_admin")
+		private boolean siteAdmin;
 
-		@JsonProperty("local_time")
-		private String localTime;
-
-		@JsonProperty("last_sign_in_at")
-		private String lastSignInAt;
-
-		@JsonProperty("color_scheme_id")
-		private int colorSchemeId;
+		@JsonProperty("company")
+		private String company;
 
 		@JsonProperty("id")
 		private int id;
 
-		@JsonProperty("state")
-		private String state;
+		@JsonProperty("public_repos")
+		private int publicRepos;
 
-		@JsonProperty("confirmed_at")
-		private String confirmedAt;
-
-		@JsonProperty("job_title")
-		private String jobTitle;
+		@JsonProperty("gravatar_id")
+		private String gravatarId;
 
 		@JsonProperty("email")
 		private String email;
 
-		@JsonProperty("current_sign_in_at")
-		private String currentSignInAt;
+		@JsonProperty("organizations_url")
+		private String organizationsUrl;
 
-		@JsonProperty("two_factor_enabled")
-		private boolean twoFactorEnabled;
+		@JsonProperty("hireable")
+		private boolean hireable;
 
-		@JsonProperty("shared_runners_minutes_limit")
-		private Object sharedRunnersMinutesLimit;
+		@JsonProperty("starred_url")
+		private String starredUrl;
 
-		@JsonProperty("is_followed")
-		private boolean isFollowed;
+		@JsonProperty("followers_url")
+		private String followersUrl;
 
-		@JsonProperty("external")
-		private boolean external;
+		@JsonProperty("public_gists")
+		private int publicGists;
+
+		@JsonProperty("url")
+		private String url;
+
+		@JsonProperty("received_events_url")
+		private String receivedEventsUrl;
 
 		@JsonProperty("followers")
 		private int followers;
@@ -187,17 +174,11 @@ public class GitHubTokenResponse implements Serializable {
 		@JsonProperty("avatar_url")
 		private String avatarUrl;
 
-		@JsonProperty("web_url")
-		private String webUrl;
+		@JsonProperty("events_url")
+		private String eventsUrl;
 
-		@JsonProperty("website_url")
-		private String websiteUrl;
-
-		@JsonProperty("extra_shared_runners_minutes_limit")
-		private Object extraSharedRunnersMinutesLimit;
-
-		@JsonProperty("organization")
-		private String organization;
+		@JsonProperty("html_url")
+		private String htmlUrl;
 
 		@JsonProperty("following")
 		private int following;
@@ -208,28 +189,8 @@ public class GitHubTokenResponse implements Serializable {
 		@JsonProperty("location")
 		private String location;
 
-		@JsonProperty("pronouns")
-		private String pronouns;
-
-		@JsonProperty("public_email")
-		private String publicEmail;
-
-		@JsonProperty("username")
-		private String username;
-
-	}
-
-	@Data
-	public static class IdentitiesItem {
-
-		@JsonProperty("provider")
-		private String provider;
-
-		@JsonProperty("saml_provider_id")
-		private Object samlProviderId;
-
-		@JsonProperty("extern_uid")
-		private String externUid;
+		@JsonProperty("node_id")
+		private String nodeId;
 
 	}
 
