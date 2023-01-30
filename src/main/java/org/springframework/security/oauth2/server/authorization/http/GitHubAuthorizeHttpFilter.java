@@ -9,9 +9,9 @@ package org.springframework.security.oauth2.server.authorization.http;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -52,7 +52,11 @@ public class GitHubAuthorizeHttpFilter extends HttpFilter {
 
 	public static final String PREFIX_URL = "/github/authorize";
 
-	public static final String AUTHORIZE_URL = "https://github.com/oauth/authorize?client_id=%s&redirect_uri=%s&response_type=code&scope=%s&state=%s";
+	/**
+	 * @see <a href=
+	 * "https://docs.github.com/zh/developers/apps/building-oauth-apps/authorizing-oauth-apps#1-%E8%AF%B7%E6%B1%82%E7%94%A8%E6%88%B7%E7%9A%84-github-%E6%A0%87%E8%AF%86">1.请求用户的GitHub标识</a>
+	 */
+	public static final String AUTHORIZE_URL = "https://github.com/login/oauth/authorize?client_id=%s&redirect_uri=%s&response_type=code&scope=%s&state=%s";
 
 	private GitHubProperties gitHubProperties;
 
