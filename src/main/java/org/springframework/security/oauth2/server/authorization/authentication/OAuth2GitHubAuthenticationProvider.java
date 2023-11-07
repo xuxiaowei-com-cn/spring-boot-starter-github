@@ -78,7 +78,7 @@ public class OAuth2GitHubAuthenticationProvider implements AuthenticationProvide
 	 * @see <a href=
 	 * "https://docs.github.com/zh/developers/apps/building-oauth-apps/authorizing-oauth-apps#2-%E7%94%A8%E6%88%B7%E8%A2%AB-github-%E9%87%8D%E5%AE%9A%E5%90%91%E5%9B%9E%E4%BD%A0%E7%9A%84%E7%AB%99%E7%82%B9">2.用户被GitHub重定向回你的站点</a>
 	 */
-	public static final String ACCESS_TOKEN_URL = "https://github.com/login/oauth/access_token?client_id={client_id}&client_secret={client_secret}&code={code}&redirect_uri={redirect_uri}";
+	public static final String ACCESS_TOKEN_URL = "https://github.com/login/oauth/access_token?code={code}&redirect_uri={redirect_uri}";
 
 	/**
 	 * @see <a href=
